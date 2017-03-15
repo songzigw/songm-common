@@ -22,8 +22,6 @@ public abstract class Entity {
     private Date updated;
     /** 描述 */
     private String remark;
-    /** 数据激活状态 */
-    private Boolean status;
 
     public String getNo() {
         return no;
@@ -65,19 +63,11 @@ public abstract class Entity {
         this.remark = remark;
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
         return String.format(
-                "Entity [no=%s, version=%s, created=%tc, updated=%tc, status=%b, remark=%s]",
-                no, version, created, updated, status, remark);
+                "Entity [no=%s, version=%s, created=%tc, updated=%tc, remark=%s]",
+                no, version, created, updated, remark);
     }
 
     public void init() {
@@ -86,9 +76,6 @@ public abstract class Entity {
         }
         if (this.created == null) {
             this.created = new Date();
-        }
-        if (this.status == null) {
-            this.status = true;
         }
     }
 }
