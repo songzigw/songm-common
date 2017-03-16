@@ -16,8 +16,16 @@ public class JsonUtils {
         return gson.toJson(obj, clazz);
     }
 
+    public static <T> String toJson(Object obj) {
+        return toJson(obj, obj.getClass());
+    }
+    
     public static <T> byte[] toJsonBytes(Object obj, Class<T> clazz) {
         return toJson(obj, clazz).getBytes();
+    }
+    
+    public static <T> byte[] toJsonBytes(Object obj) {
+        return toJson(obj).getBytes();
     }
 
     public static <T> T fromJson(String str, Class<T> clazz) {
