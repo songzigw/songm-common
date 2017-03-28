@@ -30,15 +30,11 @@ public class ServiceException extends Exception {
     private String errDesc;
     /** 人机交互错误通知(给使用者看的) */
     private String errNotice;
-    /** 错误信息封装 */
-    private ErrorInfo errInfo;
+    /** 错误信息码 */
+    private String errCode;
 
     public String getErrCode() {
-        return errInfo.getErrCode();
-    }
-
-    public ErrorInfo getErrInfo() {
-        return errInfo;
+        return errCode;
     }
 
     public String getErrDesc() {
@@ -49,41 +45,44 @@ public class ServiceException extends Exception {
         return errNotice;
     }
 
-    public ServiceException(ErrorInfo errInfo, String errDesc) {
-        super(errInfo.getErrCode() + ":" + errDesc);
-        this.errInfo = errInfo;
+    public ServiceException(String errCode, String errDesc) {
+        super(errCode + ": " + errDesc);
+        this.errCode = errCode;
         this.errDesc = errDesc;
         this.errNotice = errDesc;
     }
 
-    public ServiceException(ErrorInfo errInfo, String errDesc,
+    public ServiceException(String errCode, String errDesc,
             String errNotice) {
-        this(errInfo, errDesc);
+        this(errCode, errDesc);
         this.errNotice = errNotice;
     }
 
-    public ServiceException(ErrorInfo errInfo, String errDesc, Throwable e) {
-        super(errInfo.getErrCode() + ":" + errDesc, e);
-        this.errInfo = errInfo;
+    public ServiceException(String errCode, String errDesc, Throwable e) {
+        super(errCode + ": " + errDesc, e);
+        this.errCode = errCode;
         this.errDesc = errDesc;
         this.errNotice = errDesc;
     }
 
-    public ServiceException(ErrorInfo errInfo, String errDesc, String errNotice,
+    public ServiceException(String errCode, String errDesc, String errNotice,
             Throwable e) {
-        this(errInfo, errDesc, e);
+        this(errCode, errDesc, e);
         this.errNotice = errNotice;
     }
 
-    public ServiceException(final String eCode, String errDesc,
-            String errNotice, Throwable e) {
-        this(new ErrorInfo() {
-            @Override
-            public String getErrCode() {
-                return eCode;
-            }
-        }, errDesc, e);
-        this.errNotice = errNotice;
-    }
+//    public ServiceException(final String eCode, String errDesc,
+//            String errNotice, Throwable e) {
+//        this(new ErrorInfo() {
+//            
+//            private static final long serialVersionUID = 5823526915490870978L;
+//
+//            @Override
+//            public String getErrCode() {
+//                return eCode;
+//            }
+//        }, errDesc, e);
+//        this.errNotice = errNotice;
+//    }
 
 }

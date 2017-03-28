@@ -27,7 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @author zhangsong
  *
  */
-public class BaseController {
+public abstract class BaseController {
     private static final Log log = LogFactory.getLog(BaseController.class);
 
     private static final String UTF_8 = "utf-8";
@@ -73,11 +73,11 @@ public class BaseController {
         return getString(name, null);
     }
 
-    public String getString(String name, String defaultValue) {
+    public String getString(String name, String defValue) {
         String resultStr = getRequest().getParameter(name);
         if (resultStr == null || "".equals(resultStr)
                 || "null".equals(resultStr) || "undefined".equals(resultStr)) {
-            return defaultValue;
+            return defValue;
         } else {
             return resultStr;
         }
@@ -105,32 +105,32 @@ public class BaseController {
         return getInt(name, 0);
     }
 
-    public int getInt(String name, int defaultValue) {
+    public int getInt(String name, int defValue) {
         String resultStr = getRequest().getParameter(name);
         if (resultStr != null) {
             try {
                 return Integer.parseInt(resultStr);
             } catch (Exception e) {
-                return defaultValue;
+                return defValue;
             }
         }
-        return defaultValue;
+        return defValue;
     }
 
     public BigDecimal getBigDecimal(String name) {
         return getBigDecimal(name, null);
     }
 
-    public BigDecimal getBigDecimal(String name, BigDecimal defaultValue) {
+    public BigDecimal getBigDecimal(String name, BigDecimal defValue) {
         String resultStr = getRequest().getParameter(name);
         if (resultStr != null) {
             try {
                 return BigDecimal.valueOf(Double.parseDouble(resultStr));
             } catch (Exception e) {
-                return defaultValue;
+                return defValue;
             }
         }
-        return defaultValue;
+        return defValue;
     }
 
     /**
