@@ -43,6 +43,11 @@ public abstract class BaseController {
                 .getRequestAttributes()).getRequest();
     }
 
+    protected HttpServletResponse getResponse() {
+        return ((ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes()).getResponse();
+    }
+
     /**
      * 获取session
      * 
