@@ -14,6 +14,9 @@ public class PageBean<T> implements Serializable {
 
     private static final long serialVersionUID = -1081813527339854550L;
 
+    // 日期之前的数据
+    private Long before;
+    
     // 指定的或是页面参数
     private int currentPage; // 当前页
     private int numPerPage; // 每页显示多少条
@@ -247,6 +250,14 @@ public class PageBean<T> implements Serializable {
 
     public void setCountResultMap(Map<String, Object> countResultMap) {
         this.countResultMap = countResultMap;
+    }
+
+    public Long getBefore() {
+        return before;
+    }
+
+    public void setBefore(Long before) {
+        this.before = before;
     }
 
 }

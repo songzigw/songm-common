@@ -11,6 +11,9 @@ public class PageParam implements Serializable {
 
     private static final long serialVersionUID = -952137614374314986L;
 
+    /** 时间戳 */
+    private Long before;
+
     /**
      * 默认为第一页.
      */
@@ -26,9 +29,19 @@ public class PageParam implements Serializable {
      */
     public static final int MAX_PAGE_SIZE = 100;
 
-    private int pageNum = DEFAULT_PAGE_NUM; // 当前页数
+    // 当前页数
+    private int pageNum = DEFAULT_PAGE_NUM;
 
-    private int numPerPage; // 每页记录数
+    // 每页记录数
+    private int numPerPage;
+
+    public Long getBefore() {
+        return before;
+    }
+
+    public void setBefore(Long before) {
+        this.before = before;
+    }
 
     /**
      * 默认构造函数
@@ -42,14 +55,16 @@ public class PageParam implements Serializable {
      * @param pageNum
      * @param numPerPage
      */
-    public PageParam(int pageNum, int numPerPage) {
+    public PageParam(Integer pageNum, Integer numPerPage) {
+        if (pageNum == null) pageNum = 0;
+        if (numPerPage == null) numPerPage = 0;
         this.pageNum = pageNum;
         this.numPerPage = numPerPage;
     }
 
     /** 当前页数 */
     public int getPageNum() {
-        return pageNum;
+        return pageNum > 0 ? pageNum : DEFAULT_PAGE_NUM;
     }
 
     /** 当前页数 */

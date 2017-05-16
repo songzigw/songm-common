@@ -225,6 +225,9 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
             paramMap = new HashMap<String, Object>();
         }
 
+        if (pageParam.getPageNum() > 1) {
+            paramMap.put("pageBefore", pageParam.getBefore());
+        }
         // 统计总记录数
         Long totalCount = sessionTemplate
                 .selectOne(getStatement(SQL_LIST_PAGE_COUNT), paramMap);
@@ -250,18 +253,25 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
         List<T> list = sessionTemplate.selectList(getStatement(SQL_LIST_PAGE),
                 paramMap);
 
+        PageBean<T> pageBean = null;
         Object isCount = paramMap.get("isCount"); // 是否统计当前分页条件下的数据：1:是，其他为否
-        if ("1".equals(isCount.toString())) {
+        if (isCount != null && "1".equals(isCount.toString())) {
             Map<String, Object> countResultMap = sessionTemplate
                     .selectOne(getStatement(SQL_COUNT_BY_PAGE_PARAM), paramMap);
-            return new PageBean<T>(pageParam.getPageNum(),
+            pageBean = new PageBean<T>(pageParam.getPageNum(),
                     pageParam.getNumPerPage(), totalCount.intValue(), list,
                     countResultMap);
         } else {
             // 构造分页对象
-            return new PageBean<T>(pageParam.getPageNum(),
+            pageBean = new PageBean<T>(pageParam.getPageNum(),
                     pageParam.getNumPerPage(), totalCount.intValue(), list);
         }
+        if (pageParam.getBefore() != null) {
+            pageBean.setBefore(pageParam.getBefore());
+        } else {
+            pageBean.setBefore(new Date().getTime());
+        }
+        return pageBean;
     }
 
     /**
