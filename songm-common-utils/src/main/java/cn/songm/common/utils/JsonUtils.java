@@ -3,44 +3,64 @@ package cn.songm.common.utils;
 import java.lang.reflect.Type;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class JsonUtils {
 
-    private static Gson gson = new Gson();
+    private static JsonUtils instance;
 
-    public static <T> String toJson(Object obj, Type type) {
+    private Gson gson;
+    
+    private JsonUtils() {}
+    
+    public synchronized static void init(GsonBuilder builder) {
+        if (null != instance) {
+            return;
+        }
+        instance = new JsonUtils();
+        instance.gson = builder.create();
+    }
+    
+    public static JsonUtils getInstance() {
+        if (null == instance) {
+            throw new NullPointerException();
+        }
+        return instance;
+    }
+
+    public <T> String toJson(Object obj, Type type) {
         return gson.toJson(obj, type);
     }
 
-    public static <T> String toJson(Object obj, Class<T> clazz) {
+    public <T> String toJson(Object obj, Class<T> clazz) {
         return gson.toJson(obj, clazz);
     }
 
-    public static <T> String toJson(Object obj) {
+    public <T> String toJson(Object obj) {
         return toJson(obj, obj.getClass());
     }
     
-    public static <T> byte[] toJsonBytes(Object obj, Class<T> clazz) {
+    public <T> byte[] toJsonBytes(Object obj, Class<T> clazz) {
         return toJson(obj, clazz).getBytes();
     }
     
-    public static <T> byte[] toJsonBytes(Object obj) {
+    public <T> byte[] toJsonBytes(Object obj) {
         return toJson(obj).getBytes();
     }
 
-    public static <T> T fromJson(String str, Class<T> clazz) {
+    public <T> T fromJson(String str, Class<T> clazz) {
         return gson.fromJson(str, clazz);
     }
 
-    public static <T> T fromJson(byte[] json, Class<T> clazz) {
+    public <T> T fromJson(byte[] json, Class<T> clazz) {
         return fromJson(new String(json), clazz);
     }
 
-    public static <T> T fromJson(String json, Type typeOfT) {
+    public <T> T fromJson(String json, Type typeOfT) {
         return gson.fromJson(json, typeOfT);
     }
     
-    public static <T> T fromJson(byte[] json, Type typeOfT) {
+    public <T> T fromJson(byte[] json, Type typeOfT) {
         return fromJson(new String(json), typeOfT);
     }
 }

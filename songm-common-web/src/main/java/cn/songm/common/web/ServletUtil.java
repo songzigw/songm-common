@@ -30,7 +30,7 @@ public class ServletUtil {
             Type t) throws IOException {
         response.setContentType("text/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        out.print(JsonUtils.toJson(o, t));
+        out.print(JsonUtils.getInstance().toJson(o, t));
         out.flush();
         out.close();
     }
