@@ -1,5 +1,6 @@
 package cn.songm.common.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import cn.songm.common.utils.StringUtils;
@@ -10,7 +11,9 @@ import cn.songm.common.utils.StringUtils;
  * @author zhangsong
  *
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable {
+
+    private static final long serialVersionUID = 5568936941569759043L;
 
     /** 系统编号(一般情况)，在没有业务ID编号的情况下，这个键可以充当业务ID，即主键id */
     private String no;
