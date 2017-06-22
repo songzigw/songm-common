@@ -260,4 +260,20 @@ public class PageBean<T> implements Serializable {
         this.before = before;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("PageBean [");
+        str.append("before=").append(before)
+        .append(", currentPage=").append(currentPage)
+        .append(", numPerPage=").append(numPerPage)
+        .append(", totalCount=").append(totalCount)
+        .append(", recordList=").append(recordList)
+        .append(", totalPage=").append(totalPage)
+        .append(", beginPageIndex=").append(beginPageIndex)
+        .append(", endPageIndex=").append(endPageIndex)
+        .append(", countResultMap=").append(countResultMap)
+        .append("]");
+        return str.toString();
+    }
+
 }
