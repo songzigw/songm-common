@@ -127,7 +127,7 @@ public interface BaseDao<T> {
      * @param id
      * @return
      */
-    int delete(String id);
+    int delete(Object id);
 
     /**
      * 根据id批量删除数据

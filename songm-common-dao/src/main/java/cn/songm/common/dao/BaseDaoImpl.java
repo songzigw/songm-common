@@ -178,7 +178,7 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
      * @param id
      * @return
      */
-    public int delete(String id) {
+    public int delete(Object id) {
         return (int) sessionTemplate.delete(getStatement(SQL_DELETE_BY_ID), id);
     }
 

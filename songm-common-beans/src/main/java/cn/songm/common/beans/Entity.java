@@ -73,12 +73,13 @@ public abstract class Entity implements Serializable {
                 no, version, created, updated, remark);
     }
 
-    public void init() {
+    public Entity init() {
         if (this.no == null) {
             this.no = StringUtils.get32UUID();
         }
         if (this.created == null) {
             this.created = new Date();
         }
+        return this;
     }
 }
