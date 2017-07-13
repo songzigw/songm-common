@@ -2,33 +2,53 @@ package cn.songm.common.redis;
 
 import java.util.Set;
 
-public interface BaseRedis {
+import org.springframework.data.redis.connection.RedisConnection;
 
+public interface BaseRedis<T> {
+
+    /**
+     * 序列化
+     * 
+     * @param entity
+     * @param connection
+     * @return
+     */
+    public T serialize(T entity, RedisConnection connection);
+    
+    /**
+     * 反序列化
+     * 
+     * @param entity
+     * @param connection
+     * @return
+     */
+    public T unserialize(T entity, RedisConnection connection);
+    
     /**
      * 通过key删除
      * 
      * @param key
      */
-    public abstract long del(String... keys);
+    public long del(String... keys);
 
     /**
-     * 添加key value 并且设置存活时间(byte)
+     * 添加key value并且设置存活时间(byte)
      * 
      * @param key
      * @param value
      * @param liveTime
      */
-    public abstract void set(byte[] key, byte[] value, long liveTime);
+    public void set(byte[] key, byte[] value, long liveTime);
 
     /**
-     * 添加key value 并且设置存活时间
+     * 添加key value并且设置存活时间
      * 
      * @param key
      * @param value
      * @param liveTime
      *            单位秒
      */
-    public abstract void set(String key, String value, long liveTime);
+    public void set(String key, String value, long liveTime);
 
     /**
      * 添加key value
@@ -36,7 +56,7 @@ public interface BaseRedis {
      * @param key
      * @param value
      */
-    public abstract void set(String key, String value);
+    public void set(String key, String value);
 
     /**
      * 添加key value (字节)(序列化)
@@ -44,7 +64,7 @@ public interface BaseRedis {
      * @param key
      * @param value
      */
-    public abstract void set(byte[] key, byte[] value);
+    public void set(byte[] key, byte[] value);
 
     /**
      * 获取redis value (String)
@@ -52,7 +72,7 @@ public interface BaseRedis {
      * @param key
      * @return
      */
-    public abstract String get(String key);
+    public String get(String key);
 
     /**
      * 通过正则匹配keys
@@ -70,14 +90,14 @@ public interface BaseRedis {
     public abstract boolean exists(String key);
 
     /**
-     * 清空redis 所有数据
+     * 清空redis所有数据
      * 
      * @return
      */
     public abstract String flushDB();
 
     /**
-     * 查看redis里有多少数据
+     * 查看redis里有多少数据库
      */
     public abstract long dbSize();
 

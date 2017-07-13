@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
-public class BaseRedisImpl implements BaseRedis {
+public abstract class BaseRedisImpl<T> implements BaseRedis<T> {
 
     private static String redisCode = "utf-8";
 
@@ -119,5 +119,9 @@ public class BaseRedisImpl implements BaseRedis {
                 return connection.ping();
             }
         });
+    }
+    
+    protected static String format(String format, Object... args) {
+        return String.format(format, args);
     }
 }
