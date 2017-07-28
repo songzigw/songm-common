@@ -34,6 +34,12 @@ import cn.songm.common.beans.PageParam;
 public interface BaseDao<T> {
 
     /**
+     * 获取序列值
+     * @return
+     */
+    public long selectSequence();
+
+    /**
      * 单条插入数据
      * 
      * @param entity
@@ -66,20 +72,12 @@ public interface BaseDao<T> {
     int update(List<T> list);
 
     /**
-     * 根据column批量更新数据
-     * 
-     * @param paramMap
-     * @return
-     */
-    int update(Map<String, Object> paramMap);
-
-    /**
      * 根据主键查询数据
      * 
      * @param id
      * @return
      */
-    T getById(Object id);
+    T selectOneById(Object id);
 
     /**
      * 根据column查询数据
@@ -87,23 +85,7 @@ public interface BaseDao<T> {
      * @param paramMap
      * @return
      */
-    public T getByColumn(Map<String, Object> paramMap);
-
-    /**
-     * 根据条件查询
-     * 
-     * @param paramMap
-     * @return
-     */
-    public T getBy(Map<String, Object> paramMap);
-
-    /**
-     * 根据条件查询列表数据
-     * 
-     * @param paramMap
-     * @return
-     */
-    public List<T> listBy(Map<String, Object> paramMap);
+    public T selectOneByColumn(Map<String, Object> paramMap);
 
     /**
      * 根据column查询列表数据
@@ -111,7 +93,7 @@ public interface BaseDao<T> {
      * @param paramMap
      * @return
      */
-    public List<T> listByColumn(Map<String, Object> paramMap);
+    public List<T> selectListByColumn(Map<String, Object> paramMap);
 
     /**
      * 根据column查询记录数
@@ -119,7 +101,7 @@ public interface BaseDao<T> {
      * @param paramMap
      * @return
      */
-    Long getCountByColumn(Map<String, Object> paramMap);
+    Long selectCountByColumn(Map<String, Object> paramMap);
 
     /**
      * 根据id删除数据
@@ -152,7 +134,7 @@ public interface BaseDao<T> {
      * @param paramMap
      * @return
      */
-    public PageBean<T> listPage(PageParam pageParam,
+    public PageBean<T> selectListPage(PageParam pageParam,
             Map<String, Object> paramMap);
 
     public SqlSession getSqlSession();

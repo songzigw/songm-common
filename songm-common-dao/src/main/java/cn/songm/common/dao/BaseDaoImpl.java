@@ -26,18 +26,19 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
 
     protected static final Log LOG = LogFactory.getLog(BaseDaoImpl.class);
 
+    public static final String SQL_SEQUENCE_NEXT = "sequenceNext";
     public static final String SQL_INSERT = "insert";
     public static final String SQL_BATCH_INSERT = "batchInsert";
     public static final String SQL_UPDATE_BY_ID = "updateByPrimaryKey";
     public static final String SQL_BATCH_UPDATE_BY_IDS = "batchUpdateByIds";
-    public static final String SQL_BATCH_UPDATE_BY_COLUMN = "batchUpdateByColumn";
+    //public static final String SQL_BATCH_UPDATE_BY_COLUMN = "batchUpdateByColumn";
     public static final String SQL_SELECT_BY_ID = "selectByPrimaryKey";
     public static final String SQL_LIST_BY_COLUMN = "listByColumn";
     public static final String SQL_COUNT_BY_COLUMN = "countByColumn";
     public static final String SQL_DELETE_BY_ID = "deleteByPrimaryKey";
     public static final String SQL_BATCH_DELETE_BY_IDS = "batchDeleteByIds";
     public static final String SQL_BATCH_DELETE_BY_COLUMN = "batchDeleteByColumn";
-    public static final String SQL_LIST_BY = "listBy";
+    //public static final String SQL_LIST_BY = "listBy";
     public static final String SQL_LIST_PAGE = "listPage";
     public static final String SQL_LIST_PAGE_COUNT = "listPageCount";
     // 根据当前分页参数进行统计
@@ -57,18 +58,19 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
     public SqlSession getSqlSession() {
         return super.getSqlSession();
     }
+    
+    @Override
+    public long selectSequence() {
+        return sessionTemplate.selectOne(getStatement(SQL_SEQUENCE_NEXT));
+    }
 
-    /**
-     * 单条插入数据.
-     */
+    @Override
     public int insert(T entity) {
         entity.init();
         return sessionTemplate.insert(getStatement(SQL_INSERT), entity);
     }
 
-    /**
-     * 批量插入数据.
-     */
+    @Override
     public int insert(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -76,17 +78,13 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
         return sessionTemplate.insert(getStatement(SQL_BATCH_INSERT), list);
     }
 
-    /**
-     * 根据id单条更新数据.
-     */
+    @Override
     public int update(T entity) {
         entity.setUpdated(new Date());
         return sessionTemplate.update(getStatement(SQL_UPDATE_BY_ID), entity);
     }
 
-    /**
-     * 根据id批量更新数据.
-     */
+    @Override
     public int update(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -95,28 +93,13 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
                 list);
     }
 
-    /**
-     * 根据column批量更新数据.
-     */
-    public int update(Map<String, Object> paramMap) {
-        if (paramMap == null) {
-            return 0;
-        }
-        return sessionTemplate.update(getStatement(SQL_BATCH_UPDATE_BY_COLUMN),
-                paramMap);
-    }
-
-    /**
-     * 根据主键查询数据.
-     */
-    public T getById(Object id) {
+    @Override
+    public T selectOneById(Object id) {
         return sessionTemplate.selectOne(getStatement(SQL_SELECT_BY_ID), id);
     }
 
-    /**
-     * 根据column查询数据.
-     */
-    public T getByColumn(Map<String, Object> paramMap) {
+    @Override
+    public T selectOneByColumn(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
         }
@@ -124,33 +107,8 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
                 paramMap);
     }
 
-    /**
-     * 根据条件查询 getBy: selectOne <br/>
-     * 
-     * @param paramMap
-     * @return
-     */
-    public T getBy(Map<String, Object> paramMap) {
-        if (paramMap == null) {
-            return null;
-        }
-        return sessionTemplate.selectOne(getStatement(SQL_LIST_BY), paramMap);
-    }
-
-    /**
-     * 根据条件查询列表数据.
-     */
-    public List<T> listBy(Map<String, Object> paramMap) {
-        if (paramMap == null) {
-            return null;
-        }
-        return sessionTemplate.selectList(getStatement(SQL_LIST_BY), paramMap);
-    }
-
-    /**
-     * 根据column查询列表数据.
-     */
-    public List<T> listByColumn(Map<String, Object> paramMap) {
+    @Override
+    public List<T> selectListByColumn(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
         }
@@ -158,13 +116,8 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
                 paramMap);
     }
 
-    /**
-     * 根据column查询记录数
-     * 
-     * @param paramMap
-     * @return
-     */
-    public Long getCountByColumn(Map<String, Object> paramMap) {
+    @Override
+    public Long selectCountByColumn(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return null;
         }
@@ -172,22 +125,12 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
                 paramMap);
     }
 
-    /**
-     * 根据id删除数据
-     * 
-     * @param id
-     * @return
-     */
+    @Override
     public int delete(Object id) {
         return (int) sessionTemplate.delete(getStatement(SQL_DELETE_BY_ID), id);
     }
 
-    /**
-     * 根据id批量删除数据
-     * 
-     * @param list
-     * @return
-     */
+    @Override
     public int delete(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -197,12 +140,7 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
         }
     }
 
-    /**
-     * 根据column批量删除数据
-     * 
-     * @param paramMap
-     * @return
-     */
+    @Override
     public int delete(Map<String, Object> paramMap) {
         if (paramMap == null) {
             return 0;
@@ -212,14 +150,8 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
         }
     }
 
-    /**
-     * 分页查询数据
-     * 
-     * @param pageParam
-     * @param paramMap
-     * @return
-     */
-    public PageBean<T> listPage(PageParam pageParam,
+    @Override
+    public PageBean<T> selectListPage(PageParam pageParam,
             Map<String, Object> paramMap) {
         if (paramMap == null) {
             paramMap = new HashMap<String, Object>();

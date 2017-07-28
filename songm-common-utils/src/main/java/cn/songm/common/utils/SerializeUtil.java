@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 public class SerializeUtil {
 
     public static byte[] serialize(Object object) {
+        if (object == null) return null;
         ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = null;
         try {
@@ -24,6 +25,7 @@ public class SerializeUtil {
     }
 
     public static Object unserialize(byte[] bytes) {
+        if (bytes == null) return null;
         ByteArrayInputStream bais = null;
         try {
             // 反序列化
