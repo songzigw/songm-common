@@ -32,7 +32,7 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
     public static final String SQL_UPDATE_BY_ID = "updateByPrimaryKey";
     public static final String SQL_BATCH_UPDATE_BY_IDS = "batchUpdateByIds";
     //public static final String SQL_BATCH_UPDATE_BY_COLUMN = "batchUpdateByColumn";
-    public static final String SQL_SELECT_BY_ID = "selectByPrimaryKey";
+    public static final String SQL_ONE_BY_ID = "selectByPrimaryKey";
     public static final String SQL_LIST_BY_COLUMN = "listByColumn";
     public static final String SQL_COUNT_BY_COLUMN = "countByColumn";
     public static final String SQL_DELETE_BY_ID = "deleteByPrimaryKey";
@@ -95,7 +95,7 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
 
     @Override
     public T selectOneById(Object id) {
-        return sessionTemplate.selectOne(getStatement(SQL_SELECT_BY_ID), id);
+        return sessionTemplate.selectOne(getStatement(SQL_ONE_BY_ID), id);
     }
 
     @Override
