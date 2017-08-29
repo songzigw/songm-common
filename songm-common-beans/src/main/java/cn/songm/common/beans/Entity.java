@@ -17,8 +17,8 @@ public abstract class Entity implements Serializable {
 
     /** 系统编号(一般情况)，在没有业务ID编号的情况下，这个键可以充当业务ID，即主键id */
     private String no;
-    /** 版本号 */
-    private String version;
+    /** 数据版本号 */
+    private Integer version;
     /** 创建时间 */
     private Date created;
     /** 修改时间 */
@@ -34,11 +34,11 @@ public abstract class Entity implements Serializable {
         this.no = no;
     }
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
