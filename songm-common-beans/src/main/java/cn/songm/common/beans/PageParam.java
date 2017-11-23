@@ -11,7 +11,7 @@ public class PageParam implements Serializable {
 
     private static final long serialVersionUID = -952137614374314986L;
 
-    /** 时间戳 */
+    /** 查询时间戳之前的数据 */
     private Long before;
 
     /**
@@ -33,7 +33,7 @@ public class PageParam implements Serializable {
     private int pageNum = DEFAULT_PAGE_NUM;
 
     // 每页记录数
-    private int numPerPage;
+    private int numPerPage = DEFAULT_NUM_PER_PAGE;
 
     public Long getBefore() {
         return before;

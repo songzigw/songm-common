@@ -14,7 +14,7 @@ public class PageBean<T> implements Serializable {
 
     private static final long serialVersionUID = -1081813527339854550L;
 
-    // 日期之前的数据
+    // 查询时间戳之前的数据
     private Long before;
     
     // 指定的或是页面参数
