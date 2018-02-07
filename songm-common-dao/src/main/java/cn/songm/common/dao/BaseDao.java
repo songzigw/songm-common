@@ -35,6 +35,7 @@ public interface BaseDao<T> {
 
     /**
      * 获取序列值
+     * 
      * @return
      */
     public long selectSequence();
@@ -62,6 +63,14 @@ public interface BaseDao<T> {
      * @return
      */
     int update(T entity);
+
+    /**
+     * 根据id单条更新数据
+     * 
+     * @param paramMap
+     * @return
+     */
+    int update(Map<String, Object> paramMap);
 
     /**
      * 根据id批量更新数据
@@ -135,6 +144,12 @@ public interface BaseDao<T> {
      * @return
      */
     public PageBean<T> selectListPage(PageParam pageParam,
+            Map<String, Object> paramMap);
+
+    public List<T> selectListByColumn(PageParam pageParam,
+            Map<String, Object> paramMap);
+
+    public Long selectCountByColumn(PageParam pageParam,
             Map<String, Object> paramMap);
 
     public SqlSession getSqlSession();

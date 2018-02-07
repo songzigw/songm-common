@@ -16,10 +16,10 @@ public class PageBean<T> implements Serializable {
 
     // 查询时间戳之前的数据
     private Long before;
-    
+
     // 指定的或是页面参数
-    private int currentPage; // 当前页
-    private int numPerPage; // 每页显示多少条
+    private int pageNum; // 当前页
+    private int pageSize; // 每页显示多少条
 
     // 查询数据库
     private int totalCount; // 总记录数
@@ -32,96 +32,95 @@ public class PageBean<T> implements Serializable {
 
     private Map<String, Object> countResultMap; // 当前分页条件下的统计结果
 
-    public PageBean() {
-    }
-
     /**
      * 计算总页数 .
      * 
      * @param totalCount
      *            总记录数.
-     * @param numPerPage
+     * @param pageSize
      *            每页记录数.
      * @return totalPage 总页数.
      */
-    public static int countTotalPage(int totalCount, int numPerPage) {
-        if (totalCount % numPerPage == 0) {
+    public static int countTotalPage(int totalCount, int pageSize) {
+        if (totalCount % pageSize == 0) {
             // 刚好整除
-            return totalCount / numPerPage;
+            return totalCount / pageSize;
         } else {
             // 不能整除则总页数为：商 + 1
-            return totalCount / numPerPage + 1;
+            return totalCount / pageSize + 1;
         }
     }
 
     /**
-     * 校验当前页数currentPage.<br/>
-     * 1、先根据总记录数totalCount和每页记录数numPerPage，计算出总页数totalPage.<br/>
-     * 2、判断页面提交过来的当前页数currentPage是否大于总页数totalPage，大于则返回totalPage.<br/>
-     * 3、判断currentPage是否小于1，小于则返回1.<br/>
-     * 4、其它则直接返回currentPage .
+     * 校验当前页数pageNum.<br/>
+     * 1、先根据总记录数totalCount和每页记录数pageSize，计算出总页数totalPage.<br/>
+     * 2、判断页面提交过来的当前页数pageNum是否大于总页数totalPage，大于则返回totalPage.<br/>
+     * 3、判断pageNum是否小于1，小于则返回1.<br/>
+     * 4、其它则直接返回pageNum .
      * 
      * @param totalCount
      *            要分页的总记录数 .
-     * @param numPerPage
+     * @param pageSize
      *            每页记录数大小 .
-     * @param currentPage
+     * @param pageNum
      *            输入的当前页数 .
-     * @return currentPage .
+     * @return pageNum .
      */
-    public static int checkCurrentPage(int totalCount, int numPerPage,
-            int currentPage) {
-        int totalPage = PageBean.countTotalPage(totalCount, numPerPage); // 最大页数
-        if (currentPage > totalPage) {
+    public static int checkPageNum(int totalCount, int pageSize, int pageNum) {
+        int totalPage = PageBean.countTotalPage(totalCount, pageSize); // 最大页数
+        if (pageNum > totalPage) {
             // 如果页面提交过来的页数大于总页数，则将当前页设为总页数
             // 此时要求totalPage要大于获等于1
             if (totalPage < 1) {
                 return 1;
             }
             return totalPage;
-        } else if (currentPage < 1) {
+        } else if (pageNum < 1) {
             return 1; // 当前页不能小于1（避免页面输入不正确值）
         } else {
-            return currentPage;
+            return pageNum;
         }
     }
 
     /**
-     * 校验页面输入的每页记录数numPerPage是否合法 .<br/>
-     * 1、当页面输入的每页记录数numPerPage大于允许的最大每页记录数MAX_PAGE_SIZE时，返回MAX_PAGE_SIZE.
-     * 2、如果numPerPage小于1，则返回默认的每页记录数DEFAULT_PAGE_SIZE.
+     * 校验页面输入的每页记录数pageSize是否合法.<br/>
+     * 1、当页面输入的每页记录数pageSize大于允许的最大每页记录数MAX_PAGE_SIZE时，返回MAX_PAGE_SIZE.<br/>
+     * 2、如果pageSize小于1，则返回默认的每页记录数DEFAULT_PAGE_SIZE.
      * 
-     * @param numPerPage
-     *            页面输入的每页记录数 .
-     * @return checkNumPerPage .
+     * @param pageSize
+     *            页面输入的每页记录数.
+     * @return checkPageSize .
      */
-    public static int checkNumPerPage(int numPerPage) {
-        if (numPerPage > PageParam.MAX_PAGE_SIZE) {
+    public static int checkPageSize(int pageSize) {
+        if (pageSize > PageParam.MAX_PAGE_SIZE) {
             return PageParam.MAX_PAGE_SIZE;
-        } else if (numPerPage < 1) {
-            return PageParam.DEFAULT_NUM_PER_PAGE;
+        } else if (pageSize < 1) {
+            return PageParam.DEFAULT_PAGE_SIZE;
         } else {
-            return numPerPage;
+            return pageSize;
         }
     }
 
+    public PageBean() {
+    }
+    
     /**
      * 只接受前4个必要的属性，会自动的计算出其他3个属生的值
      * 
-     * @param currentPage
-     * @param numPerPage
+     * @param pageNum
+     * @param pageSize
      * @param totalCount
      * @param recordList
      */
-    public PageBean(int currentPage, int numPerPage, int totalCount,
+    public PageBean(int pageNum, int pageSize, int totalCount,
             List<T> recordList) {
-        this.currentPage = currentPage;
-        this.numPerPage = numPerPage;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
         this.totalCount = totalCount;
         this.recordList = recordList;
 
         // 计算总页码
-        totalPage = (totalCount + numPerPage - 1) / numPerPage;
+        totalPage = (totalCount + pageSize - 1) / pageSize;
 
         // 计算 beginPageIndex 和 endPageIndex
         if (totalPage <= 10) {
@@ -131,8 +130,8 @@ public class PageBean<T> implements Serializable {
         } else {
             // 如果总页数多于10页，则显示当前页附近的共10个页码
             // 当前页附近的共10个页码（前4个 + 当前页 + 后5个）
-            beginPageIndex = currentPage - 4;
-            endPageIndex = currentPage + 5;
+            beginPageIndex = pageNum - 4;
+            endPageIndex = pageNum + 5;
             // 当前面的页码不足4个时，则显示前10个页码
             if (beginPageIndex < 1) {
                 beginPageIndex = 1;
@@ -149,21 +148,21 @@ public class PageBean<T> implements Serializable {
     /**
      * 只接受前5个必要的属性，会自动的计算出其他3个属生的值
      * 
-     * @param currentPage
-     * @param numPerPage
+     * @param pageNum
+     * @param pageSize
      * @param totalCount
      * @param recordList
      */
-    public PageBean(int currentPage, int numPerPage, int totalCount,
+    public PageBean(int pageNum, int pageSize, int totalCount,
             List<T> recordList, Map<String, Object> countResultMap) {
-        this.currentPage = currentPage;
-        this.numPerPage = numPerPage;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
         this.totalCount = totalCount;
         this.recordList = recordList;
         this.countResultMap = countResultMap;
 
         // 计算总页码
-        totalPage = (totalCount + numPerPage - 1) / numPerPage;
+        totalPage = (totalCount + pageSize - 1) / pageSize;
 
         // 计算 beginPageIndex 和 endPageIndex
         if (totalPage <= 10) {
@@ -173,8 +172,8 @@ public class PageBean<T> implements Serializable {
         } else {
             // 如果总页数多于10页，则显示当前页附近的共10个页码
             // 当前页附近的共10个页码（前4个 + 当前页 + 后5个）
-            beginPageIndex = currentPage - 4;
-            endPageIndex = currentPage + 5;
+            beginPageIndex = pageNum - 4;
+            endPageIndex = pageNum + 5;
             // 当前面的页码不足4个时，则显示前10个页码
             if (beginPageIndex < 1) {
                 beginPageIndex = 1;
@@ -196,12 +195,12 @@ public class PageBean<T> implements Serializable {
         this.recordList = recordList;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
+    public int getPageNum() {
+        return pageNum;
     }
 
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 
     public int getTotalPage() {
@@ -212,12 +211,12 @@ public class PageBean<T> implements Serializable {
         this.totalPage = totalPage;
     }
 
-    public int getNumPerPage() {
-        return numPerPage;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public void setNumPerPage(int numPerPage) {
-        this.numPerPage = numPerPage;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     public int getTotalCount() {
@@ -264,15 +263,14 @@ public class PageBean<T> implements Serializable {
     public String toString() {
         StringBuilder str = new StringBuilder("PageBean [");
         str.append("before=").append(before)
-        .append(", currentPage=").append(currentPage)
-        .append(", numPerPage=").append(numPerPage)
-        .append(", totalCount=").append(totalCount)
-        .append(", recordList=").append(recordList)
-        .append(", totalPage=").append(totalPage)
-        .append(", beginPageIndex=").append(beginPageIndex)
-        .append(", endPageIndex=").append(endPageIndex)
-        .append(", countResultMap=").append(countResultMap)
-        .append("]");
+                .append(", pageNum=").append(pageNum)
+                .append(", pageSize=").append(pageSize)
+                .append(", totalCount=").append(totalCount)
+                .append(", recordList=").append(recordList)
+                .append(", totalPage=").append(totalPage)
+                .append(", beginPageIndex=").append(beginPageIndex)
+                .append(", endPageIndex=").append(endPageIndex)
+                .append(", countResultMap=").append(countResultMap).append("]");
         return str.toString();
     }
 

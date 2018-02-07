@@ -85,6 +85,12 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
     }
 
     @Override
+    public int update(Map<String, Object> paramMap) {
+        paramMap.put("updated", new Date());
+        return sessionTemplate.update(getStatement(SQL_UPDATE_BY_ID), paramMap);
+    }
+    
+    @Override
     public int update(List<T> list) {
         if (list.isEmpty() || list.size() <= 0) {
             return 0;
@@ -165,21 +171,21 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
                 .selectOne(getStatement(SQL_LIST_PAGE_COUNT), paramMap);
 
         // 校验当前页数
-        int currentPage = PageBean.checkCurrentPage(totalCount.intValue(),
-                pageParam.getNumPerPage(), pageParam.getPageNum());
-        pageParam.setPageNum(currentPage); // 为当前页重新设值
-        // 校验页面输入的每页记录数numPerPage是否合法
-        int numPerPage = PageBean.checkNumPerPage(pageParam.getNumPerPage()); // 校验每页记录数
-        pageParam.setNumPerPage(numPerPage); // 重新设值
+        int pageNum = PageBean.checkPageNum(totalCount.intValue(),
+                pageParam.getPageSize(), pageParam.getPageNum());
+        pageParam.setPageNum(pageNum); // 为当前页重新设值
+        // 校验页面输入的每页记录数PageSize是否合法
+        int pageSize = PageBean.checkPageSize(pageParam.getPageSize()); // 校验每页记录数
+        pageParam.setPageSize(pageSize); // 重新设值
 
         // 根据页面传来的分页参数构造SQL分页参数
         paramMap.put("pageFirst",
-                (pageParam.getPageNum() - 1) * pageParam.getNumPerPage());
-        paramMap.put("pageSize", pageParam.getNumPerPage());
+                (pageParam.getPageNum() - 1) * pageParam.getPageSize());
+        paramMap.put("pageSize", pageParam.getPageSize());
         paramMap.put("startRowNum",
-                (pageParam.getPageNum() - 1) * pageParam.getNumPerPage());
+                (pageParam.getPageNum() - 1) * pageParam.getPageSize());
         paramMap.put("endRowNum",
-                pageParam.getPageNum() * pageParam.getNumPerPage());
+                pageParam.getPageNum() * pageParam.getPageSize());
 
         // 获取分页数据集
         List<T> list = sessionTemplate.selectList(getStatement(SQL_LIST_PAGE),
@@ -191,12 +197,12 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
             Map<String, Object> countResultMap = sessionTemplate
                     .selectOne(getStatement(SQL_COUNT_BY_PAGE_PARAM), paramMap);
             pageBean = new PageBean<T>(pageParam.getPageNum(),
-                    pageParam.getNumPerPage(), totalCount.intValue(), list,
+                    pageParam.getPageSize(), totalCount.intValue(), list,
                     countResultMap);
         } else {
             // 构造分页对象
             pageBean = new PageBean<T>(pageParam.getPageNum(),
-                    pageParam.getNumPerPage(), totalCount.intValue(), list);
+                    pageParam.getPageSize(), totalCount.intValue(), list);
         }
         if (pageParam.getBefore() != null) {
             pageBean.setBefore(pageParam.getBefore());
@@ -206,6 +212,46 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
         return pageBean;
     }
 
+    @Override
+    public List<T> selectListByColumn(PageParam pageParam, Map<String, Object> paramMap) {
+        if (paramMap == null) {
+            paramMap = new HashMap<String, Object>();
+        }
+
+        if (pageParam.getPageNum() > 1) {
+            paramMap.put("pageBefore", pageParam.getBefore());
+        }
+
+        // 校验页面输入的每页记录数PageSize是否合法
+        int pageSize = PageBean.checkPageSize(pageParam.getPageSize());
+        pageParam.setPageSize(pageSize);
+
+        // 根据页面传来的分页参数构造SQL分页参数
+        paramMap.put("pageFirst",
+                (pageParam.getPageNum() - 1) * pageParam.getPageSize());
+        paramMap.put("pageSize", pageParam.getPageSize());
+        //paramMap.put("startRowNum",
+        //        (pageParam.getPageNum() - 1) * pageParam.getPageSize());
+        //paramMap.put("endRowNum",
+        //        pageParam.getPageNum() * pageParam.getPageSize());
+
+        // 获取分页数据集
+        return sessionTemplate.selectList(getStatement(SQL_LIST_PAGE), paramMap);
+    }
+    
+    @Override
+    public Long selectCountByColumn(PageParam pageParam, Map<String, Object> paramMap) {
+        if (paramMap == null) {
+            paramMap = new HashMap<String, Object>();
+        }
+
+        if (pageParam.getPageNum() > 1) {
+            paramMap.put("pageBefore", pageParam.getBefore());
+        }
+        // 统计总记录数
+        return sessionTemplate.selectOne(getStatement(SQL_LIST_PAGE_COUNT), paramMap);
+    }
+    
     /**
      * 获取Mapper命名空间
      * 
@@ -213,10 +259,8 @@ public abstract class BaseDaoImpl<T extends Entity> extends SqlSessionDaoSupport
      * @return
      */
     public String getStatement(String sqlId) {
-        String name = this.getClass().getName();
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append(".").append(sqlId);
-        return sb.toString();
+        StringBuilder sb = new StringBuilder(getClass().getName());
+        return sb.append(".").append(sqlId).toString();
     }
 
 }
