@@ -43,6 +43,20 @@ public abstract class BaseRedisImpl<T> implements BaseRedis<T> {
             }
         });
     }
+    
+    @Override
+    public void expire(String key, long seconds) {
+        _expire(key.getBytes(), seconds);
+    }
+    
+    private void _expire(byte[] key, long seconds) {
+        redisTemplate.execute(new RedisCallback<Boolean>() {
+            public Boolean doInRedis(RedisConnection connection)
+                    throws DataAccessException {
+                return connection.expire(key, seconds);
+            }
+        });
+    }
 
     @Override
     public void set(String key, String value, long liveTime) {

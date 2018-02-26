@@ -7,6 +7,54 @@ import org.springframework.data.redis.connection.RedisConnection;
 public interface BaseRedis<T> {
 
     /**
+     * 通过正则匹配keys
+     * @param pattern
+     * @return
+     */
+    public Set<String> getkeys(String pattern);
+    
+    /**
+     * 检查key是否已经存在
+     * 
+     * @param key
+     * @return
+     */
+    public boolean exists(String key);
+
+    /**
+     * 通过key删除
+     * 
+     * @param key
+     */
+    public long del(String... keys);
+    
+    /**
+     * 为给定 key 设置过期时间
+     * @param keys
+     * @param seconds
+     */
+    public void expire(String key, long seconds);
+    
+    /**
+     * 清空所有数据
+     * 
+     * @return
+     */
+    public String flushDB();
+
+    /**
+     * 查看有多少数据库
+     */
+    public long dbSize();
+
+    /**
+     * 检查是否连接成功
+     * 
+     * @return
+     */
+    public String ping();
+    
+    /**
      * 序列化
      * 
      * @param entity
@@ -24,15 +72,10 @@ public interface BaseRedis<T> {
      */
     public T unserialize(T entity, RedisConnection connection);
     
-    /**
-     * 通过key删除
-     * 
-     * @param key
-     */
-    public long del(String... keys);
+    // String类型
 
     /**
-     * 添加key value并且设置存活时间(byte)
+     * 添加键值对并且设置存活时间
      * 
      * @param key
      * @param value
@@ -41,7 +84,7 @@ public interface BaseRedis<T> {
     public void set(byte[] key, byte[] value, long liveTime);
 
     /**
-     * 添加key value并且设置存活时间
+     * 添加键值对并且设置存活时间
      * 
      * @param key
      * @param value
@@ -51,7 +94,7 @@ public interface BaseRedis<T> {
     public void set(String key, String value, long liveTime);
 
     /**
-     * 添加key value
+     * 添加键值对
      * 
      * @param key
      * @param value
@@ -59,7 +102,7 @@ public interface BaseRedis<T> {
     public void set(String key, String value);
 
     /**
-     * 添加key value (字节)(序列化)
+     * 添加键值对
      * 
      * @param key
      * @param value
@@ -67,44 +110,13 @@ public interface BaseRedis<T> {
     public void set(byte[] key, byte[] value);
 
     /**
-     * 获取redis value (String)
+     * 获取值
      * 
      * @param key
      * @return
      */
     public String get(String key);
 
-    /**
-     * 通过正则匹配keys
-     * @param pattern
-     * @return
-     */
-    public Set<String> getkeys(String pattern);
+    // List 类型
     
-    /**
-     * 检查key是否已经存在
-     * 
-     * @param key
-     * @return
-     */
-    public abstract boolean exists(String key);
-
-    /**
-     * 清空redis所有数据
-     * 
-     * @return
-     */
-    public abstract String flushDB();
-
-    /**
-     * 查看redis里有多少数据库
-     */
-    public abstract long dbSize();
-
-    /**
-     * 检查是否连接成功
-     * 
-     * @return
-     */
-    public abstract String ping();
 }
