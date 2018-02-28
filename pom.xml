@@ -190,9 +190,14 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-all</artifactId>
+				<artifactId>activemq-client</artifactId>
 				<version>5.13.0</version>
 			</dependency>
+			<dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-pool</artifactId>
+                <version>5.13.0</version>
+            </dependency>
 
 			<dependency>
 				<groupId>javax.servlet</groupId>
