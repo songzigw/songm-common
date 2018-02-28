@@ -77,6 +77,9 @@ public abstract class Entity implements Serializable {
         if (this.no == null) {
             this.no = StringUtils.get32UUID();
         }
+        if (this.version == null) {
+            this.version = 0;
+        }
         if (this.created == null) {
             this.created = new Date();
         }
