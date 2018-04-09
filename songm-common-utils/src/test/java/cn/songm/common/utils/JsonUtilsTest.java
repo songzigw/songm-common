@@ -91,7 +91,7 @@ public class JsonUtilsTest {
     @BeforeClass
     public static void setUpBeforeClass() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Date.class, new DateTypeAdapter())
+        builder.registerTypeAdapter(Date.class, new GsonDateTypeAdapter())
                 .registerTypeAdapter(Operation.class,
                         new GsonEnumTypeAdapter<>(Operation.AAA));
         JsonUtils.init(builder);
