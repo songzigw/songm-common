@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.songm.common</groupId>
 	<artifactId>songm-common</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<distributionManagement>
@@ -44,27 +44,27 @@
 			<dependency>
 				<groupId>cn.songm.common</groupId>
 				<artifactId>songm-common-utils</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.songm.common</groupId>
 				<artifactId>songm-common-beans</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.songm.common</groupId>
 				<artifactId>songm-common-dao</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.songm.common</groupId>
 				<artifactId>songm-common-service</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.songm.common</groupId>
 				<artifactId>songm-common-web</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.1</version>
 			</dependency>
 
 			<dependency>
@@ -311,6 +311,28 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-source-plugin</artifactId>  
+                <version>2.4</version>  
+                <executions>  
+		          <execution>  
+		            <id>attach-sources</id>  
+		            <phase>verify</phase><!-- 要绑定到的生命周期的阶段 在verify之后，install之前执行下面指定的goal -->  
+		            <goals>  
+		              <goal>jar-no-fork</goal><!-- 类似执行mvn source:jar -->  
+		            </goals>  
+		          </execution>  
+		        </executions>  
+            </plugin>
 		</plugins>
 	</build>
 
@@ -321,6 +343,7 @@
 		<module>songm-common-beans</module>
 		<module>songm-common-service</module>
 		<module>songm-common-redis</module>
-    <module>songm-common-mq</module>
-  </modules>
+        <module>songm-common-mq</module>
+   </modules>
+
 </project>
