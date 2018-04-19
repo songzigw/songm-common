@@ -19,8 +19,6 @@ package cn.songm.common.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
-
 import cn.songm.common.beans.PageBean;
 import cn.songm.common.beans.PageParam;
 
@@ -151,7 +149,5 @@ public interface BaseDao<T> {
 
     public Long selectCountByColumn(PageParam pageParam,
             Map<String, Object> paramMap);
-
-    public SqlSession getSqlSession();
 
 }

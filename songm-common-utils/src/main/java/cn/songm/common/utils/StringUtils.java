@@ -1,5 +1,9 @@
 package cn.songm.common.utils;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -178,5 +182,81 @@ public class StringUtils {
      */
     public static boolean isEmpty(Map<?, ?> obj) {
         return null == obj || obj.isEmpty();
+    }
+    
+    @SuppressWarnings("rawtypes")
+	public static String toString(Object obj) {
+    	if (null == obj) {
+            return null;
+        }
+    	
+        // getClass返回一个Class类型的实例,这个实例里面保存着这个对象运行时的类型信息
+        Class cl = obj.getClass();
+        // 如果这个对象是String类型的,则可以直接返回String
+        if (cl == String.class) {
+            return (String) obj;
+        }
+        // 数组类型,需要特殊处理
+        if (cl.isArray()) {
+            // getComponentType用于获取数组内部数据类型
+            String r = cl.getComponentType() + "[]{";
+            // 通过反射获得数组长度,然后遍历每个元素
+            for (int i = 0; i < Array.getLength(obj); i++) {
+                // 数组内元素用逗号分隔
+                if (i > 0) {
+                    r += ",";
+                }
+                // 通过反射获得数组内第i个元素
+                Object val = Array.get(obj, i);
+                // isPrimitive用来判断数组内元素是否是基本数据类型
+                if (cl.getComponentType().isPrimitive()) {
+                    // 是基本数据类型,则直接加上去
+                    r += val;
+                } else {
+                    // 否则的话,递归调用toString
+                    r += toString(val);
+                }
+            }
+            return r + "}";
+        }
+        String r = cl.getName();
+        // 开始遍历这个对象的所有域
+        do {
+            r += "[";
+            // 获得这个类的全部域
+            Field[] fields = cl.getDeclaredFields();
+            // 将所有域设为可访问
+            AccessibleObject.setAccessible(fields, true);
+            // 遍历所有域,获得域的名字和值
+            for (Field f : fields) {
+                // 不是静态域
+                if (!Modifier.isStatic(f.getModifiers())) {
+                    if (!r.endsWith("[")) {
+                        r += ",";
+                    }
+                    // 获得域名
+                    r += f.getName() + "=";
+                    try {
+                        // 获得域的类型
+                        Class t = f.getType();
+                        // 获得域的值
+                        Object val = f.get(obj);
+                        // 如果是基本类型,则直接加
+                        if (t.isPrimitive()) {
+                            r += val;
+                        } else {
+                            // 否则递归调用
+                            r += toString(val);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            r += "]";
+            // 处理超类
+            cl = cl.getSuperclass();
+        } while (cl != null);
+        return r;
     }
 }
