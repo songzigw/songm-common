@@ -23,7 +23,22 @@
             <artifactId>songm-common-beans</artifactId>
         </dependency>
 
+        <!-- 线程连接池框架 -->
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
+
+		<dependency>
+           	<groupId>org.springframework.amqp</groupId>
+           	<artifactId>spring-rabbit</artifactId>
+       	</dependency>
+
+		<dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
         </dependency>
@@ -35,16 +50,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jms</artifactId>
         </dependency>
-
-        <!-- 线程连接池框架 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-        </dependency>
-
+        
     </dependencies>
 </project>

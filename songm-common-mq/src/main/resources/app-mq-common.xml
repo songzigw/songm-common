@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+
+	<!-- 连接服务配置 如果MQ服务器在远程服务器上，请新建用户用新建的用户名密码 guest默认不允许远程登录 -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="192.168.3.112" username="vlook" password="vlook" port="5672"
+		virtual-host="/" channel-cache-size="5" />
+	<!-- 配置admin，自动根据配置文件生成交换器和队列，无需手动配置 -->
+	<rabbit:admin connection-factory="connectionFactory" />
+
+</beans>
