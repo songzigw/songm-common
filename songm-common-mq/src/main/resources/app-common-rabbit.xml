@@ -5,9 +5,12 @@
 
 	<!-- 连接服务配置 如果MQ服务器在远程服务器上，请新建用户用新建的用户名密码 guest默认不允许远程登录 -->
 	<rabbit:connection-factory id="connectionFactory"
-		host="192.168.3.112" username="vlook" password="vlook" port="5672"
+		host="${rabbit.broker.ip}" port="${rabbit.broker.port}" 
+		username="${rabbit.broker.username}" password="${rabbit.broker.password}"
 		virtual-host="/" channel-cache-size="5" />
 	<!-- 配置admin，自动根据配置文件生成交换器和队列，无需手动配置 -->
 	<rabbit:admin connection-factory="connectionFactory" />
 
+	<!-- spring amqp默认的是jackson 的一个插件,目的将生产者生产的数据转换为json存入消息队列，由于Gson的速度快于jackson,这里替换为Gson的一个实现 -->
+	<bean id="jsonMessageConverter" class="cn.songm.common.mq.Gson2JsonMessageConverter" />
 </beans>

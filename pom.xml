@@ -25,7 +25,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<logback.version>1.1.7</logback.version>
+		<slf4j.log4j12.version>1.7.25</slf4j.log4j12.version>
 		<junit.version>4.10</junit.version>
 		<spring.version>4.2.5.RELEASE</spring.version>
 		<aspectj.version>1.6.12</aspectj.version>
@@ -68,9 +68,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.log4j12.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -304,8 +304,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

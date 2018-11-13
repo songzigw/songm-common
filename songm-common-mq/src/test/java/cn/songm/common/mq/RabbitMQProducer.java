@@ -3,23 +3,23 @@ package cn.songm.common.mq;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 
-@Component("mqProducer")
-public class MQProducerImpl implements MQProducer {
+public class RabbitMQProducer {
 
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private AmqpTemplate amqpTemplate;
 
-	@Override
 	public void sendDataToQueue(Object object) {
-		System.out.println("--" + amqpTemplate);
 		try {
 			amqpTemplate.convertAndSend(object);
-			System.out.println("------------消息发送成功");
+			log.info("消息发送成功");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -32,14 +32,13 @@ public class MQProducerImpl implements MQProducer {
 		msg.put("serverIp", "192.168.31.123");
 		msg.put("sendTime", System.currentTimeMillis());
 		
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("app-mq-producer.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("app-common-rabbit-producer.xml");
 		context.start();
 		
-		MQProducer mqp = (MQProducer)context.getBean("mqProducer");
-		mqp.sendDataToQueue(msg);
+		RabbitMQProducer pro = (RabbitMQProducer)context.getBean("rabbitMQProducer");
+		pro.sendDataToQueue(msg);
 		
 		context.stop();
 		context.close();
 	}
-	
 }

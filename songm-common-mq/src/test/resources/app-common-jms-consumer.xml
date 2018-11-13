@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:property-placeholder location="classpath:jms.properties"/>
+	<context:component-scan base-package="cn.songm.common.mq" />
+	<import resource="app-common-jms.xml"/>
+
+    <!-- 消息监听器 -->
+    <bean id="jmsMQConsumer" class="cn.songm.common.mq.JmsMQConsumer" />
+
+    <!--这个是队列目的地 -->
+    <bean id="queueName" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${jms.queue.name}"></constructor-arg>
+    </bean>
+    
+    <!-- 消息监听容器 -->
+    <bean id="containerReqInfo"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="queueName" />
+        <property name="messageListener" ref="jmsMQConsumer" />
+    </bean>
+
+</beans>

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
 
-	<import resource="app-mq-common.xml"/>
+	<context:property-placeholder location="classpath:rabbit.properties"/>
+	<context:component-scan base-package="cn.songm.common.mq" />
+	<import resource="app-common-rabbit.xml"/>
 
 	<!-- queue 队列声明 -->
 	<rabbit:queue durable="true" auto-delete="false"
@@ -18,10 +24,7 @@
 		</rabbit:bindings>
 	</rabbit:direct-exchange>
 
-	<bean id="receiveMessageListener" class="cn.songm.common.mq.QueueListenter" />
-
-	<!-- spring amqp默认的是jackson 的一个插件,目的将生产者生产的数据转换为json存入消息队列，由于Gson的速度快于jackson,这里替换为Gson的一个实现 -->
-	<bean id="jsonMessageConverter" class="cn.songm.common.mq.Gson2JsonMessageConverter" />
+	<bean id="receiveMessageListener" class="cn.songm.common.mq.RabbitMQConsumer" />
 
 	<!-- queue litener 观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象 -->
 	<rabbit:listener-container
