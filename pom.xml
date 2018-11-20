@@ -351,6 +351,7 @@
         <version>2.18.1</version>
         <configuration>
           <skipTests>false</skipTests>
+          <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
       
