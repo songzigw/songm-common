@@ -25,10 +25,10 @@ public class Sequence {
     }
 
     public String getSequence(int length) {
-        StringBuffer sf = new StringBuffer(length);
+        StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            sf.append(mark[(int) ((1 - Math.random()) * mark.length)]);
+            sb.append(mark[(int) ((1 - Math.random()) * mark.length)]);
         }
-        return sf.toString();
+        return sb.toString();
     }
 }
