@@ -1,5 +1,6 @@
 package cn.songm.common.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -33,9 +34,11 @@ public class CodeUtils {
 		String outStr = null;
 		try {
 			md = MessageDigest.getInstance("SHA-1");
-			byte[] digest = md.digest(text.getBytes());
+			byte[] digest = md.digest(text.getBytes("utf-8"));
 			outStr = bytes2hex(digest);
 		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 		return outStr;
@@ -46,9 +49,11 @@ public class CodeUtils {
 		String outStr = null;
 		try {
 			md = MessageDigest.getInstance("MD5");
-			byte[] digest = md.digest(text.getBytes());
+			byte[] digest = md.digest(text.getBytes("utf-8"));
 			outStr = bytes2hex(digest);
 		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 		return outStr;
