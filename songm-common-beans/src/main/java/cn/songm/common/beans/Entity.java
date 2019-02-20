@@ -2,6 +2,8 @@ package cn.songm.common.beans;
 
 import java.util.Date;
 
+import cn.songm.common.redis.annotations.HashField;
+
 /**
  * 实体基类
  * 
@@ -13,12 +15,16 @@ public abstract class Entity implements IEntity {
     private static final long serialVersionUID = 5568936941569759043L;
 
     /** 数据版本号 */
+    @HashField("version")
     private Integer version;
     /** 创建时间 */
+    @HashField("created")
     private Date created;
     /** 修改时间 */
+    @HashField("updated")
     private Date updated;
     /** 描述 */
+    @HashField("remark")
     private String remark;
 
     public Integer getVersion() {

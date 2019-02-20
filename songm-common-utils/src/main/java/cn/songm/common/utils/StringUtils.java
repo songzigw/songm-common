@@ -3,6 +3,7 @@ package cn.songm.common.utils;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -43,20 +44,25 @@ public class StringUtils {
 		    return str.toString();
 		}
 		
-		Field[] fields = cla.getDeclaredFields();
-		AccessibleObject.setAccessible(fields, true);
-		str.append("[");
-		for (int i = 0; i < fields.length; i++) {
-		    if (i > 0) str.append(", ");
-		    Field f = fields[i];
-		    str.append(f.getName()).append("=");
-		    if (!f.getType().isPrimitive()) {
-			str.append(toString(f.get(obj)));
-		    } else {
-			str.append(f.get(obj));
-		    }
+		for (; cla != Object.class; cla = cla.getSuperclass()) {
+			Field[] fields = cla.getDeclaredFields();
+			AccessibleObject.setAccessible(fields, true);
+			str.append("[");
+			int i = 0;
+			for (Field f : fields) {
+			    if (!Modifier.isStatic(f.getModifiers())) {
+			    	if (i > 0) str.append(", ");
+			    	str.append(f.getName()).append("=");
+				    if (f.getType().isPrimitive()) {
+				    	str.append(f.get(obj));
+				    } else {
+				    	str.append(toString(f.get(obj)));
+				    }
+				    i++;
+			    }
+			}
+			str.append("]");
 		}
-		str.append("]");
 		
 		return str.toString();
 	}

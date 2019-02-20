@@ -1,5 +1,6 @@
 package cn.songm.common.beans;
 
+import cn.songm.common.redis.annotations.HashField;
 import cn.songm.common.utils.StringUtils;
 
 /**
@@ -13,7 +14,8 @@ public class EntityAdapter extends Entity {
 	private static final long serialVersionUID = -3689797880160694822L;
 
 	/** 系统编号(一般情况)，在没有业务ID编号的情况下，这个键可以充当业务ID，即主键id */
-    private String no;
+    @HashField("no")
+	private String no;
 	
 	public String getNo() {
         return no;

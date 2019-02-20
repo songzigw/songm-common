@@ -50,6 +50,11 @@
       </dependency>
       <dependency>
         <groupId>cn.songm.common</groupId>
+        <artifactId>songm-common-redis</artifactId>
+        <version>0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.songm.common</groupId>
         <artifactId>songm-common-dao</artifactId>
         <version>0.1</version>
       </dependency>

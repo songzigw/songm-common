@@ -1,8 +1,6 @@
 package cn.songm.common.utils;
 
-import java.io.Serializable;
-
-public class ObjTest implements Serializable {
+public class ObjTest extends ObjParent {
 
 	private static final long serialVersionUID = -1286563857975054273L;
 
